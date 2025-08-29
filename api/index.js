@@ -1,23 +1,19 @@
-// api/index.js
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config(); // To use .env variables locally
+require("dotenv").config(); // فقط برای توسعه محلی
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors()); // Enable CORS for all routes
+app.use(cors());
 app.use(express.json());
 
-// A simple test route
+// Routes
 app.get("/api/hello", (req, res) => {
   res.json({ message: "Hello from the Express server!" });
 });
 
-// Example route using an environment variable
 app.get("/api/secret", (req, res) => {
-  // This variable will be set in Vercel's UI for production
   const dbUrl = process.env.DATABASE_URL;
   if (!dbUrl) {
     return res.status(500).json({ error: "Database URL not configured." });
@@ -27,10 +23,11 @@ app.get("/api/secret", (req, res) => {
   });
 });
 
-// Vercel handles the listening part, but for local dev we need this:
-if (process.env.NODE_ENV !== "production") {
+// فقط برای توسعه محلی
+if (process.env.NODE_ENV === "development") {
+  const PORT = process.env.PORT || 3001;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
-// Export the app for Vercel's serverless environment
+// Export برای Vercel serverless
 module.exports = app;

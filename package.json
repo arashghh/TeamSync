@@ -1,0 +1,8 @@
+{
+  "name": "my-fullstack-app-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install": "cd api && npm install && cd ../client && npm install"
+  }
+}

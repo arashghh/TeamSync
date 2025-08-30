@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config(); // فقط برای توسعه محلی
+require("dotenv").config(); // Only for local development
 
 const app = express();
 
@@ -8,12 +8,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.get("/api/hello", (req, res) => {
+// --- CORRECTED ROUTES ---
+// The "/api" prefix is removed because vercel.json handles it.
+app.get("/hello", (req, res) => {
   res.json({ message: "Hello from the Express server!" });
 });
 
-app.get("/api/secret", (req, res) => {
+app.get("/secret", (req, res) => {
   const dbUrl = process.env.DATABASE_URL;
   if (!dbUrl) {
     return res.status(500).json({ error: "Database URL not configured." });
@@ -23,11 +24,11 @@ app.get("/api/secret", (req, res) => {
   });
 });
 
-// فقط برای توسعه محلی
+// This block is for local development only. Vercel ignores it.
 if (process.env.NODE_ENV === "development") {
   const PORT = process.env.PORT || 3001;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
-// Export برای Vercel serverless
+// Export for Vercel serverless functions
 module.exports = app;

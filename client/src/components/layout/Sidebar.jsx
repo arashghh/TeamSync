@@ -1,13 +1,29 @@
 // src/components/layout/Sidebar.js
 import React from "react";
-import { HomeIcon, TrophyIcon, CalendarIcon, AppLogo } from "../ui/Icons";
+import { NavLink } from "react-router-dom";
+import {
+  HomeIcon,
+  TrophyIcon,
+  CalendarIcon,
+  AppLogo,
+  // QuizIcon, // فرض می‌کنیم این آیکون را اضافه کرده‌اید
+} from "../ui/Icons";
 
-function Sidebar({ currentPage, setCurrentPage, currentUser }) {
+// دیگر نیازی به props های currentPage و setCurrentPage نداریم
+function Sidebar({ currentUser }) {
   const navItems = [
-    { id: "dashboard", label: "Dashboard", icon: HomeIcon },
-    { id: "competition", label: "Competition", icon: TrophyIcon },
-    { id: "schedule", label: "Schedule", icon: CalendarIcon },
+    { path: "/dashboard", label: "Dashboard", icon: HomeIcon },
+    { path: "/competition", label: "Competition", icon: TrophyIcon },
+    { path: "/schedule", label: "Schedule", icon: CalendarIcon },
+    { path: "/quiz", label: "Quiz", icon: CalendarIcon }, // آیتم جدید برای کوییز
   ];
+
+  // استایل‌ها را برای خوانایی بهتر جدا می‌کنیم
+  const baseLinkClasses =
+    "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-sm font-semibold";
+  const activeLinkClasses = "bg-teal-50 text-teal-600";
+  const inactiveLinkClasses =
+    "text-slate-500 hover:bg-slate-100 hover:text-slate-800";
 
   return (
     <aside className="w-64 bg-white/95 backdrop-blur-sm border-r border-slate-200 h-screen p-6 flex flex-col flex-shrink-0">
@@ -20,22 +36,20 @@ function Sidebar({ currentPage, setCurrentPage, currentUser }) {
       <nav className="flex-grow">
         <ul className="space-y-2">
           {navItems.map((item) => (
-            <li key={item.id}>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentPage(item.id);
-                }}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-sm font-semibold ${
-                  currentPage === item.id
-                    ? "bg-teal-50 text-teal-600"
-                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
-                }`}
+            <li key={item.path}>
+              {/* به جای تگ <a> از NavLink استفاده می‌کنیم */}
+              <NavLink
+                to={item.path}
+                // NavLink یک پراپرتی به نام isActive به ما می‌دهد
+                className={({ isActive }) =>
+                  `${baseLinkClasses} ${
+                    isActive ? activeLinkClasses : inactiveLinkClasses
+                  }`
+                }
               >
                 <item.icon className="w-5 h-5" />
                 <span>{item.label}</span>
-              </a>
+              </NavLink>
             </li>
           ))}
         </ul>

@@ -1,15 +1,15 @@
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config(); // Only for local development
+require("dotenv").config(); // only affects local dev, Vercel ignores it
 
 const app = express();
 
-// Middleware
+// --- Middleware ---
 app.use(cors());
 app.use(express.json());
 
-// --- CORRECTED ROUTES ---
-// The "/api" prefix is removed because vercel.json handles it.
+// --- Routes ---
+// No `/api` prefix here — vercel.json will handle that
 app.get("/hello", (req, res) => {
   res.json({ message: "Hello from the Express server!" });
 });
@@ -24,11 +24,13 @@ app.get("/secret", (req, res) => {
   });
 });
 
-// This block is for local development only. Vercel ignores it.
+// --- Local development only ---
 if (process.env.NODE_ENV === "development") {
   const PORT = process.env.PORT || 3001;
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running locally at http://localhost:${PORT}`);
+  });
 }
 
-// Export for Vercel serverless functions
+// --- Export for Vercel ---
 module.exports = app;
